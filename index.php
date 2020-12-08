@@ -1,49 +1,19 @@
-<?php
-$server="localhost";
-$username="root";
-$password="";
-$database="code";
-$sql="select * from a_code";
-$conn = mysqli_connect($server, $username, $password, $database);
-$res=$conn->query($sql);
-if (!$res) {
-      die("Connection failed: " . mysqli_connect_error());
-}
-?>
-<?php
-if (isset($_POST['searchcode']))
-{
-    $inputcode=$_POST['inputcode'];
-    $query= "SELECT * FROM `a_code` WHERE CONCAT(`Code`, `Start`, `End`)LIKE '%".$inputcode."%'";
-    $search_result = filterTable($query);
-    
-}
- else {
-    $query = "SELECT * FROM `a_code`";
-    $search_result = filterTable($query);
-}
-
-function filterTable($query)
-{
-    $connect = mysqli_connect("localhost", "root", "", "code");
-    $filter_Result = mysqli_query($connect, $query);
-    return $filter_Result;
-}
-
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>    <script src="https://apis.google.com/js/platform.js" ></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
 
 <style>
 	option:hover {
@@ -544,65 +514,33 @@ function filterTable($query)
                 </div>
             </div>
           </header>
-    </div>
-    
-    
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add New Record</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <form action="insertcode.php" method="POST">
-          <div class="modal-body">
-   <div class="form-group">
-    <label for="code">Code</label>
-    <input type="varchar" name="alcode" class="form-control" id="exampleInputcode1" aria-describedby="emailHelp" placeholder="Enter New Code">
-  </div>
-  <div class="form-group">
-    <label for="start Date">Start Date</label>
-    <input type="date"name="start" class="form-control" id="exampleInputPassword1" placeholder="Enter Start Date">
-  </div>
-  <div class="form-group">
-    <label for="End Date">End Date</label>
-    <input type="date" name="end" class="form-control" id="exampleInputPassword1" placeholder="Enter End Date">
-  </div>
-
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" name="insert" class="btn btn-dark">Save Data</button>
-          </div>
-        </form>
-        </div>
-      </div>
-    </div>
-
-
+    </div>         
 
 <div class="data">
-  <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal">
-    Add New Record
-  </button>    <table class="table" id="mytable">
+<button class="btn-dark btn"><a href="insert.php"  class="text-white"> Add New Record </a></button> </td>    
+    <table class="table" id="mytable">
                 <thead class="thead-dark">
                   <tr>
                    <th scope="col">Code<img class="img" src="sort.png" height=10 width=10> </th>
                     <th scope="col">Start Date <img class="img" src="sort.png" height=10 width=10></th>
                     <th scope="col">End Date <img class="img" src="sort.png" height=10 width=10></th>
+                    <th scope="col">Edit </th>
+                    <th scope="col">Delete </th>
                   </tr>
                 </thead>
         <?php
-            while($row=$res->fetch_object())
+        include 'connection.php';
+        $q="select * from goprac";
+        $query=mysqli_query($con,$q);
+            while($res=mysqli_fetch_array($query))
             {
-        ?>
+            ?>
 	        <tr>
-		        <td><?php echo $row->alcode;?></td>
-		        <td><?php echo $row->start;?></td>
-		        <td><?php echo $row->end;?></td>
+		        <td><?php echo $res['alcode']; ?></td>
+		        <td><?php echo $res['start']; ?></td>
+		        <td><?php echo $res['end']; ?></td>
+                <td> <button class="btn-dark btn"><a href="edit.php?alcode=<?php echo $res['alcode']; ?>" class="text-white"> Edit </a></button> </td>
+                <td> <button class="btn-danger btn"><a href="delete.php?alcode=<?php echo $res['alcode']; ?>" class="text-white"> Delete </a></button> </td>
 	        <?php
 	         }   
         ?>
