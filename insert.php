@@ -1,155 +1,52 @@
 <?php
-$host = "localhost";
-$user = "root";
-$password ="";
-$database = "code";
+include 'connection.php';
 
-$alcode = "";
-$start = "";
-$end = "";
+if(isset($_POST['done'])){
 
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
-// connect to mysql database
-try{
-    $connect = mysqli_connect($host, $user, $password, $database);
-} catch (mysqli_sql_exception $ex) {
-    echo 'Error';
+ $alcode = $_POST['alcode'];
+ $start = $_POST['start'];
+ $end = $_POST['end'];
+ $q= " INSERT INTO `goprac`(`alcode`, `start`, `end`) VALUES ('$alcode','$start','$end')";
+ $query = mysqli_query($con,$q);
 }
-
-// get values from the form
-function getPosts()
-{
-    $posts = array();
-    $posts[0] = $_POST['alcode'];
-    $posts[1] = $_POST['start'];
-    $posts[2] = $_POST['end'];
-    return $posts;
-}
-
-// Search
-
-if(isset($_POST['search']))
-{
-    $data = getPosts();
-    
-    $search_Query = "SELECT * FROM a_code WHERE alcode = $data[0]";
-    
-    $search_Result = mysqli_query($connect, $search_Query);
-    
-    if($search_Result)
-    {
-        if(mysqli_num_rows($search_Result))
-        {
-            while($row = mysqli_fetch_array($search_Result))
-            {
-                $code = $row['alcode'];
-                $start = $row['start'];
-                $end = $row['end'];
-            }
-        }else{
-            echo 'No Data For This code';
-        }
-    }else{
-        echo 'Result Error';
-    }
-}
-
-
-// Insert
-if(isset($_POST['insert']))
-{
-    $data = getPosts();
-    $insert_Query = "INSERT INTO `a_code`(`alcode`, `start`, `end`) VALUES ('$data[0]','$data[1],'$data[2]')";
-    try{
-        $insert_Result = mysqli_query($connect, $insert_Query);
-        
-        if($insert_Result)
-        {
-            if(mysqli_affected_rows($connect) > 0)
-            {
-                echo 'Data Inserted';
-            }else{
-                echo 'Data Not Inserted';
-            }
-        }
-    } catch (Exception $ex) {
-        echo 'Error Insert '.$ex->getMessage();
-    }
-}
-
-// Delete
-if(isset($_POST['delete']))
-{
-    $data = getPosts();
-    $delete_Query = "DELETE FROM `a_code` WHERE `alcode` = $data[0]";
-    try{
-        $delete_Result = mysqli_query($connect, $delete_Query);
-        
-        if($delete_Result)
-        {
-            if(mysqli_affected_rows($connect) > 0)
-            {
-                echo 'Data Deleted';
-            }else{
-                echo 'Data Not Deleted';
-            }
-        }
-    } catch (Exception $ex) {
-        echo 'Error Delete '.$ex->getMessage();
-    }
-}
-
-// Edit
-if(isset($_POST['update']))
-{
-    $data = getPosts();
-    $update_Query = "UPDATE `a_code` SET `start`=$data[1],`end`=$data[2] WHERE `alcode` = $data[0]";
-    try{
-        $update_Result = mysqli_query($connect, $update_Query);
-        
-        if($update_Result)
-        {
-            if(mysqli_affected_rows($connect) > 0)
-            {
-                echo 'Data Updated';
-            }else{
-                echo 'Data Not Updated';
-            }
-        }
-    } catch (Exception $ex) {
-        echo 'Error Update '.$ex->getMessage();
-    }
-}
-
-
 
 ?>
 
-
-<!DOCTYPE Html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>PHP INSERT UPDATE DELETE SEARCH</title>
-    </head>
-    <body>
-        <form action="insert.php" method="post">
-            <input type="varchar" name="alcode" placeholder="code" value="<?php echo $alcode;?>"><br><br>
-            <input type="date" name="start" placeholder="First Name" value="<?php echo $start;?>"><br><br>
-            <input type="date" name="end" placeholder="Last Name" value="<?php echo $end;?>"><br><br>
-            <div>
-                <!-- Input For Add Values To Database-->
-                <input type="submit" name="insert" value="Add">
-                
-                <!-- Input For Edit Values -->
-                <input type="submit" name="update" value="Update">
-                
-                <!-- Input For Clear Values -->
-                <input type="submit" name="delete" value="Delete">
-                
-                <!-- Input For Find Values With The given code -->
-                <input type="submit" name="search" value="Find">
-            </div>
-        </form>
-    </body>
+<head>
+ <title></title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+ <div class="col-lg-6 m-auto">
+ 
+ <form method="post">
+ 
+ <br><br><div class="card">
+ 
+ <div class="card-header bg-dark">
+ <h1 class="text-white text-center">  Add New Record </h1>
+ </div><br>
+
+ <label> Code: </label>
+ <input type="text" name="alcode" class="form-control"> <br>
+
+ <label> Start Date: </label>
+ <input type="date" name="start" class="form-control"> <br>
+ <label> End Date: </label>
+ <input type="date" name="end" class="form-control"> <br>
+
+ <button class="btn btn-success" type="submit" name="done"> Update </button><br>
+
+ </div>
+ </form>
+ </div>
+</body>
 </html>
