@@ -1,4 +1,5 @@
 <?php
-mysql_connect('localhost','root','');
-mysql_select_connect('code');
+    $con= mysqli_connect('localhost','root','');
+    mysqli_select_db($con,'code');
+    
 ?>
